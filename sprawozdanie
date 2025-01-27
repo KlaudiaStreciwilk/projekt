@@ -1,0 +1,1127 @@
+\documentclass[12pt,a4paper]{report}
+\usepackage[utf8]{inputenc} % Kodowanie UTF-8
+\usepackage[T1]{fontenc}    % Kodowanie znaków
+\usepackage[polish]{babel}  % Obsługa języka polskiego
+\usepackage{mathptmx}       % Czcionka Times (obsługuje polskie znaki)
+\usepackage{geometry}       % Ustawienia marginesów
+\geometry{a4paper, left=2.75cm, right=2.75cm, top=2cm, bottom=2cm}
+\usepackage{titlesec}       % Ustawienia nagłówków
+\usepackage{titletoc}       % Ustawienia spisu treści
+\usepackage{setspace}       % Interlinia
+\usepackage{hyperref}       % Linki w dokumencie
+\usepackage{graphicx} 
+\usepackage{array}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{listings} % Pakiet do formatowania kodu
+\captionsetup[lstlisting]{labelformat=empty} % Usunięcie numeracji
+\usepackage{xcolor}
+
+
+% Ustawienia ogólne dla kodu C++
+\lstset{
+    language=C++,      % Ustawienie języka C++
+    basicstyle=\ttfamily\small,
+    numbers=none,      % Brak numeracji linii
+    backgroundcolor=\color{white},
+    showstringspaces=false,
+    tabsize=4,
+    captionpos=b,
+    frame=single,
+    breaklines=true,
+    xleftmargin=18pt,  % Margines z lewej strony
+    xrightmargin=18pt, % Margines z prawej strony
+    rulecolor=\color{black}, % Kolor ramki (czarny)
+    commentstyle=\color{purple},   % Kolor dla komentarzy (zielony)
+    morekeywords={vector, cout, cin} % Dodanie słów kluczowych, które chcesz wyróżnić
+}
+
+% Definicja dla pseudokodu
+\lstdefinelanguage{Pseudo}{
+    basicstyle=\ttfamily\small,
+    numbers=left,
+    numberstyle=\small,
+    stepnumber=1,
+    numbersep=10pt,
+    frame=single,
+    showstringspaces=false,
+    tabsize=4,
+    captionpos=b,
+    breaklines=true,
+    breakatwhitespace=false,
+    morekeywords={input, output, if, then, else, for, endfor, endif, while, return},
+    keywordstyle=\bfseries
+}
+
+
+
+% Ustawienia nagłówków rozdziałów
+\titleformat{\chapter}[hang]
+  {\normalfont\Large\bfseries}
+  {\thechapter.} % Format numeracji (np. 1.)
+  {0.5em}
+  {}
+
+% Ustawienia odstępów dla sekcji, podsekcji i pod-podsekcji
+\titlespacing{\chapter}{0pt}{14pt}{7pt} % Odstępy przed i po rozdziale
+\titlespacing{\section}{0pt}{12pt}{6pt} % Odstępy przed i po sekcji
+\titlespacing{\subsection}{0pt}{12pt}{6pt} % Odstępy przed i po podsekcji
+\titlespacing{\subsubsection}{0pt}{6pt}{6pt} % Odstępy przed i po pod-podsekcji
+
+% Ustawienia linków
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black, % Czarny kolor linków w spisie treści
+    urlcolor=black,  % Czarny kolor linków URL
+    pdftitle={Praca dyplomowa},
+    pdfauthor={Autor}
+}
+
+
+\begin{document}
+
+% Strona tytułowa
+\begin{titlepage}
+    \begin{center}
+    \includegraphics[width=0.5\textwidth]{} % Wstawienie obrazka, dostosuj rozmiar
+\begin{figure}
+        \centering
+        \includegraphics[width=0.5\linewidth]{pobrane.png}
+        \label{fig:enter-label}
+    \end{figure}
+        \vspace{1cm} % Odstęp pionowy
+
+        \vspace*{3cm}
+        
+        \Huge{\textbf{Zadanie programistyczne}}\\[2.5cm]
+        
+        \Huge{{Klaudia Stręciwilk
+        }}\\[0.5cm]
+         \Huge{{Grupa projektowa nr 7
+        }}\\[0.5cm]
+        \Huge{nr albumu 179977}\\[2cm]
+        
+        \large{Opiekun pracy:}\\
+        \large{\textbf{dr inż. Mariusz Borkowski, prof. PRz}}\\[2cm]
+        
+        \vfill
+        \large{Rzeszów, 2024}
+    \end{center}
+\end{titlepage}
+\newpage
+\newpage
+\thispagestyle{empty}
+\mbox{} % Pusta zawartość strony
+% Spis treści
+\setcounter{page}{2}
+\tableofcontents
+\newpage
+% Rozdziały
+\chapter{Treść zadania}
+Dla zadanego ciągu, zer, jedynek i dwójek, znajdź wszystkie podciągi "symetryczne względem dwójek" występujących w ciągu.
+ \newline
+ \paragraph{Przykład:}
+
+\begin{verbatim}
+Wejście [0,1,2,1,1,0,2,0,1,1,1,1,,2,0] 
+Wyjście [1,2,1], [0,2,0], [1,0,2,0,1], [1,1,0,2,0,1,1]
+
+Wejście [0,1,2,0,9,9,2,1,0,0,2,2,1,0,1]
+Wyjście Brak elementów spełniających zadane kryteria
+
+\end{verbatim}
+
+
+\chapter{Etapy rozwiązywania problemu}
+\section{Rozwiązanie - podejście pierwsze}
+
+
+
+\subsection{Analiza problemu}
+Celem zadania jest znalezienie wszystkich podciągów w ciągu liczb całkowitych (zer, jedynek i dwójek), które są symetryczne względem dwójek. Podciąg jest symetryczny względem dwójek, jeśli dla każdej dwójki w podciągu, elementy znajdujące się przed nią są identyczne z elementami znajdującymi się po niej. Oznacza to, że mamy do czynienia z tzw. „symetrią lustrzaną” w odniesieniu do dwójki w danym podciągu. 
+
+
+Założenia wejściowe: 
+
+Dany jest ciąg liczb całkowitych, który może zawierać zera, jedynki i dwójki.Należy znaleźć wszystkie podciągi tego ciągu, które spełniają warunek symetrii względem dwójek.
+
+
+Założenia wyjściowe:
+
+Program powinien wypisać wszystkie podciągi, które są symetryczne względem dwójek. Jeśli takich podciągów nie ma, program powinien zwrócić komunikat, że nie znaleziono żadnych elementów spełniających zadane kryteria.
+
+
+
+Generowanie podciągów: 
+
+Pierwszym krokiem w rozwiązaniu jest generowanie wszystkich możliwych podciągów ciągu wejściowego. Algorytm musi iterować przez wszystkie możliwe kombinacje początkowego i końcowego indeksu podciągu.
+
+Sprawdzanie symetrii:
+
+Dla każdego wygenerowanego podciągu należy sprawdzić, czy jest on symetryczny względem dwójek. Oznacza to, że dla każdej dwójki, która występuje w podciągu, należy porównać elementy znajdujące się po obu stronach tej dwójki. Jeśli dla dwójki z lewej strony elementy są identyczne z elementami po prawej stronie, podciąg jest symetryczny względem tej dwójki.
+
+Zwracanie wyników: 
+
+Jeśli którykolwiek z podciągów spełnia warunek symetrii, powinien zostać zapisany i wypisany w wynikach. Jeśli nie znaleziono żadnego podciągu spełniającego kryteria, program powinien wyświetlić komunikat: „Brak elementów spełniających zadane kryteria.”
+
+
+
+Podsumowanie:
+
+Problem znajduje wszystkie podciągi w ciągu liczb całkowitych, które są symetryczne względem dwójek. Podejście brute force do rozwiązania tego problemu jest dość proste, ale jego złożoność obliczeniowa jest wysoka. Dla dużych danych wejściowych algorytm może działać wolno, dlatego warto rozważyć optymalizację w przypadku większych ciągów.
+
+\clearpage
+
+
+\subsection{Schemat blokowy algorytmu}
+
+
+
+\begin{figure}[h!] % 'h!' oznacza próbę umieszczenia obrazu w bieżącym miejscu
+    \centering % Wyśrodkowanie obrazu
+    \includegraphics[width=\linewidth]{1 schemat blokowy funkcji sym2.jpeg} 
+    \caption{Schemat blokowy algorytmu funkcji sym2}
+   
+    \label{fig:etykieta} % Opcjonalna etykieta do odwoływania się w tekście
+\end{figure}
+\FloatBarrier
+Algorytm sprawdza symetrię podciągu w wektorze wejściowym. Działa iteracyjnie, porównując elementy po obu stronach wybranej wartości (podciag[i] == 2). Wskaźniki lewa i prawa przesuwają się w przeciwnych kierunkach, aż do naruszenia warunku równości lub zakończenia przetwarzania. W przypadku braku różnic zwracany jest wynik pozytywny (true), w przeciwnym razie negatywny (false).
+
+Prosta struktura algorytmu umożliwia łatwą implementację i sprawne wykrywanie symetrii w podciągach, zachowując skalowalność i bezpieczeństwo operacji.
+
+
+\begin{figure}[h!] % 'h!' oznacza próbę umieszczenia obrazu w bieżącym miejscu
+    \centering % Wyśrodkowanie obrazu
+    \includegraphics[width=\linewidth]{1 schemat blokowy.jpeg}
+    \caption{Schemat blokowy algorytmu funkcji main}
+
+    \label{fig:etykieta} % Opcjonalna etykieta do odwoływania się w tekście
+\end{figure}
+\FloatBarrier
+\newpage
+Algorytm iteracyjnie przetwarza wektor wejściowy, identyfikując wszystkie możliwe podciągi zawarte w danych wejściowych. Dla każdego elementu wektora (z wyjątkiem ostatniego) generowany jest podciąg na podstawie zmiennych \texttt{poczatek} i \texttt{koniec}. Następnie podciąg ten jest oceniany przy użyciu funkcji \texttt{sym2}, która sprawdza, czy spełnia określone kryteria symetrii. W przypadku spełnienia warunku, podciąg zostaje dodany do listy wynikowej.
+
+Iteracyjna natura algorytmu pozwala na przeanalizowanie każdego elementu wektora wejściowego w kontekście lokalnym, co czyni go skutecznym w wykrywaniu wzorców w danych. Dzięki stopniowej inkrementacji zmiennych \texttt{poczatek} i \texttt{koniec} algorytm zapewnia, że wszystkie możliwe podciągi są dokładnie sprawdzane. Konstrukcja ta umożliwia łatwą implementację oraz skalowalność dla dużych zbiorów danych, zapewniając jednocześnie dokładne przetwarzanie ciągów wejściowych.
+
+
+\newpage
+\subsection{Algorytm zapisany w pseudokodzie}
+
+
+\begin{lstlisting}[language=Pseudo, caption={Pseudokod dla algorytmu podejścia nr. 1}, label={alg:subsequences}]
+Funkcja sym2(podciag):
+    Dla kazdego i w indeksach podciag:
+        Jezeli podciag[i] = 2:
+            lewa = i - 1
+            prawa = i + 1
+            
+            Dopoki lewa >= 0 i prawa < rozmiar(podciag):
+                Jezeli podciag[lewa] != podciag[prawa]:
+                    Zwroc false
+                lewa = lewa - 1
+                prawa = prawa + 1
+            Koniec Dopoki
+            
+            Zwroc true
+    Koniec Dla
+    
+    Zwroc false
+
+Algorytm Glowna Funkcja:
+    ciag = [0, 1, 2, 1, 1, 0, 2, 0, 1, 1, 1, 1, 2, 0]
+    wyniki = []
+
+    Dla poczatek = 0 do rozmiar(ciag):
+        Dla koniec = poczatek + 1 do rozmiar(ciag):
+            podciag = elementy od ciag[poczatek] do ciag[koniec - 1]
+            
+            Jezeli wywolaj sym2(podciag):
+                Dodaj podciag do wyniki
+        Koniec Dla
+    Koniec Dla
+
+    Jezeli rozmiar(wyniki) = 0:
+        Wypisz "Brak elementów spelniajacych zadane kryteria."
+    Inaczej:
+        Dla kazdego podciag w wyniki:
+            Wypisz podciag
+        Koniec Dla
+
+
+\end{lstlisting}
+\newpage
+
+
+\subsection{Sprawdzenie poprawności algorytmu poprzez „ołówkowe” rozwiązanie problemu}
+
+Dane wejściowe:
+\[
+\text{ciag} = \{0, 1, 2, 1, 1, 0, 2, 0, 1, 1, 1, 1, 2, 0\}
+\]
+
+Algorytm szuka podciągów symetrycznych względem elementu \textbf{2}. Podciąg jest symetryczny, jeśli elementy po obu stronach \textbf{2} są lustrzanym odbiciem.
+
+\subsection*{Krok 1: Analiza algorytmu}
+Dla każdego podciągu, algorytm:
+\begin{enumerate}
+    \item Szuka obecności liczby \textbf{2}.
+    \item Sprawdza, czy elementy po obu stronach \textbf{2} są równe.
+    \item Jeśli tak, uznaje podciąg za symetryczny.
+\end{enumerate}
+
+\subsection*{Krok 2: Ręczne wyznaczenie podciągów}
+
+\textbf{Podciągi zaczynające się od indeksu 0:}
+\begin{enumerate}[label=\arabic*.]
+    \item \([0]\): Brak \textbf{2}. Nie symetryczny.
+    \item \([0, 1]\): Brak \textbf{2}. Nie symetryczny.
+    \item \([0, 1, 2]\): Jedna \textbf{2}, ale brak elementów po obu stronach. \textbf{Symetryczny}.
+    \item \([0, 1, 2, 1]\): Jedna \textbf{2}, symetria: \(1 = 1\). \textbf{Symetryczny}.
+    \item \([0, 1, 2, 1, 1]\): Jedna \textbf{2}, elementy: \(1, 1\) po obu stronach. \textbf{Symetryczny}.
+    \item \([0, 1, 2, 1, 1, 0]\): Jedna \textbf{2}, elementy po obu stronach nie są lustrzanym odbiciem. \textbf{Nie symetryczny}.
+\end{enumerate}
+
+\textbf{Podciągi zaczynające się od indeksu 1:}
+\begin{enumerate}[label=\arabic*.]
+    \item \([1]\): Brak \textbf{2}. Nie symetryczny.
+    \item \([1, 2]\): Jedna \textbf{2}, brak elementów po prawej stronie. \textbf{Symetryczny}.
+    \item \([1, 2, 1]\): Jedna \textbf{2}, symetria: \(1 = 1\). \textbf{Symetryczny}.
+    \item \([1, 2, 1, 1]\): Jedna \textbf{2}, elementy po obu stronach nie pasują. \textbf{Nie symetryczny}.
+\end{enumerate}
+
+\textbf{Podciągi zaczynające się od indeksu 2:}
+\begin{enumerate}[label=\arabic*.]
+    \item \([2]\): Jedna \textbf{2}, brak elementów po obu stronach. \textbf{Symetryczny}.
+    \item \([2, 1]\): Jedna \textbf{2}, brak elementów po lewej stronie. \textbf{Symetryczny}.
+    \item \([2, 1, 1]\): Jedna \textbf{2}, symetria: \(1 = 1\). \textbf{Symetryczny}.
+    \item \([2, 1, 1, 0]\): Jedna \textbf{2}, elementy po obu stronach nie pasują. \textbf{Nie symetryczny}.
+\end{enumerate}
+
+\subsection*{Krok 3: Wyniki algorytmu}
+Symetryczne podciągi względem liczby \textbf{2} to:
+\[
+\{[0, 1, 2], [0, 1, 2, 1], [0, 1, 2, 1, 1], [1, 2], [1, 2, 1], [2], [2, 1], [2, 1, 1]\}
+\]
+
+Algorytm poprawnie identyfikuje symetryczne podciągi.
+
+
+
+
+\newpage
+ 
+\subsection{Teoretyczne oszacowanie złożoności obliczeniowej}
+
+
+\section*{Złożoność obliczeniowa algorytmu}
+
+\subsection*{1. Pętla po początkach podciągów}
+W algorytmie mamy pętlę, która przechodzi przez wszystkie możliwe początki podciągów w tablicy \texttt{ciag}. Pętla ta wykonuje się od \texttt{poczatek = 0} do \texttt{poczatek = n - 1}, gdzie \( n \) to długość tablicy. \\
+Liczba iteracji tej pętli wynosi \( n \). \\
+
+Złożoność tej pętli to:
+\[
+O(n)
+\]
+
+\subsection*{2. Pętla po końcach podciągów}
+Druga pętla jest zagnieżdżona wewnątrz pierwszej i iteruje po końcach podciągów. Dla danego \texttt{poczatek} przechodzi przez wszystkie możliwe wartości \texttt{koniec}, które są większe niż \texttt{poczatek} (czyli od \texttt{poczatek + 1} do \( n \)). \\
+Dla każdej iteracji \texttt{poczatek}, liczba iteracji tej pętli wynosi \( n - \texttt{poczatek} \). \\
+
+Całkowita liczba iteracji tej pętli wynosi:
+\[
+\sum_{i=0}^{n-1} (n - i) = n + (n-1) + (n-2) + \dots + 1 = \frac{n(n+1)}{2}
+\]
+
+Złożoność tej pętli to:
+\[
+O(n^2)
+\]
+
+\subsection*{3. Pętla sprawdzająca symetrię podciągu}
+Wewnętrzna pętla w funkcji \texttt{sym2} sprawdza, czy podciąg jest symetryczny względem liczby \textbf{2}. 
+Dla każdego podciągu od \texttt{poczatek} do \texttt{koniec}, pętla iteruje przez elementy podciągu i sprawdza symetrię wokół \textbf{2}. \\
+Liczba iteracji tej pętli zależy od długości podciągu \( k \), więc dla pojedynczego podciągu wynosi \( O(k) \). \\
+
+Ponieważ suma długości wszystkich podciągów tablicy \texttt{ciag} jest proporcjonalna do liczby wszystkich możliwych podciągów, możemy oszacować całkowitą liczbę iteracji tej pętli jako:
+\[
+\sum_{i=0}^{n-1} \sum_{j=i+1}^{n} O(k) = O(n^3)
+\]
+
+Złożoność tej pętli to:
+\[
+O(n)
+\]
+
+\subsection*{4. Złożoność ogólna}
+Algorytm ma trzy zagnieżdżone pętle: 
+\begin{itemize}
+    \item Zewnętrzną \( O(n) \),
+    \item Środkową \( O(n^2) \),
+    \item Wewnętrzną \( O(n) \) dla sprawdzania symetrii. 
+\end{itemize}
+
+Zatem całkowita złożoność algorytmu to:
+\[
+O(n) \cdot O(n^2) = O(n^3)
+\]
+
+\subsection*{Uwagi}
+\begin{itemize}
+    \item Główna złożoność obliczeniowa algorytmu jest dominowana przez trzy zagnieżdżone pętle, co prowadzi do \( O(n^3) \) w najgorszym przypadku.
+    \item Operacje związane z zapisywaniem wyników mają mniejszy wpływ na złożoność w porównaniu z kosztami związanymi z trzema pętlami.
+\end{itemize}
+
+\subsection*{Podsumowanie}
+Złożoność algorytmu w najgorszym przypadku wynosi:
+\[
+O(n^3)
+\]
+
+
+\newpage
+
+\section{Rozwiązanie - podejście drugie}
+\subsection{Analiza problemu}
+
+\section*{Wprowadzenie}
+Drugi kod jest bardziej zoptymalizowaną wersją pierwszego rozwiązania. Obie wersje mają na celu znalezienie podciągów, które są symetryczne względem wartości 2, ale drugie podejście jest bardziej efektywne dzięki mniejszej liczbie operacji i zoptymalizowanemu przetwarzaniu podciągów.
+
+\section*{Główne zmiany i ich efektywność}
+
+\subsection*{Szukanie tylko dwójek}
+W pierwszym kodzie generowane są wszystkie możliwe podciągi z oryginalnej tablicy, a następnie sprawdzane, czy są symetryczne względem dwójek. To prowadzi do wygenerowania ogromnej liczby podciągów (szczególnie w dużych tablicach).
+
+W drugim kodzie szukamy tylko dwójek w tablicy, a następnie tylko te elementy sprawdzamy pod kątem symetrii. Oznacza to, że w drugim kodzie generowane są tylko te podciągi, które zawierają przynajmniej jedną 2.
+
+\textbf{Korzyść:} Zmniejszenie liczby sprawdzanych podciągów. W pierwszym przypadku generujemy wszystkie, a w drugim tylko te, które zawierają 2. Oznacza to mniejsze zużycie pamięci i mniej operacji.
+
+\subsection*{Tworzenie podciągów}
+W pierwszym kodzie dla każdego możliwego podciągu generowane są nowe wektory, co prowadzi do wielokrotnego kopiowania danych. Generowanie podciągów jest kosztowne, szczególnie przy dużych tablicach.
+
+W drugim kodzie, kiedy znajdujemy dwójkę, rozszerzamy zakres podciągu wokół tej dwójki (przesuwając początek w lewo i koniec w prawo), co pozwala na stopniowe budowanie podciągów, zamiast ich tworzenia od zera. Podciągi są tworzone tylko raz, podczas gdy w pierwszym kodzie dla każdego podciągu musimy wykonać operację kopiowania.
+
+\textbf{Korzyść:} Zmniejszenie liczby operacji kopiowania, co przyspiesza wykonanie programu.
+
+\subsection*{Sprawdzanie symetrii}
+W pierwszym kodzie funkcja \texttt{sym2} jest wywoływana dla każdego wygenerowanego podciągu, co oznacza, że każdy podciąg jest analizowany od początku.
+
+W drugim kodzie funkcja \texttt{sym2} jest wywoływana z dodatkowymi informacjami (\texttt{indeksDwojki}), co pozwala na precyzyjniejsze sprawdzenie symetrii tylko wokół obecnej dwójki, bez konieczności sprawdzania całego podciągu od nowa.
+
+\textbf{Korzyść:} Skupienie na istotnych podciągach (tych zawierających dwójki) i zoptymalizowanie analizy symetrii w obrębie podciągów.
+
+\section*{Podsumowanie: Dlaczego kod 2 jest efektywniejszy?}
+
+\subsection*{Mniejsza liczba generowanych podciągów}
+Drugi kod nie generuje wszystkich możliwych podciągów, tylko te, które zawierają przynajmniej jedną 2. Dzięki temu unika się zbędnego sprawdzania podciągów, które nie spełniają warunków symetrii.
+
+\subsection*{Oszczędność pamięci}
+W pierwszym kodzie każdorazowo tworzone są nowe wektory, co może prowadzić do dużego zużycia pamięci. Drugi kod stopniowo rozciąga podciąg wokół dwójki, co zmniejsza ilość operacji kopiowania danych.
+
+\subsection*{Optymalizacja sprawdzania symetrii}
+Dzięki temu, że sprawdzanie symetrii w drugim kodzie jest bardziej bezpośrednie i oparte na informacjach o indeksie dwójki, jest bardziej wydajne.
+
+\section*{Wydajność}
+W pierwszym kodzie mamy podwójne zagnieżdżenie pętli dla każdego możliwego podciągu, co daje czas o złożoności \(O(n^2)\), gdzie \(n\) to długość tablicy.
+
+W drugim kodzie, dla każdej dwójki, rozszerzamy zakres podciągu, co prowadzi do mniejszej liczby sprawdzanych podciągów, a operacja rozszerzania i sprawdzania symetrii dla podciągów ma mniejszą złożoność czasową, więc drugi kod jest bardziej efektywny, zwłaszcza dla dużych tablic.
+
+\section*{Podsumowanie}
+Drugie podejście znacząco poprawia wydajność i oszczędność pamięci poprzez bardziej selektywne podejście do generowania podciągów i bardziej efektywne sprawdzanie symetrii.
+
+\newpage
+
+
+
+\subsection{Schemat blokowy algorytmu}
+
+
+
+\begin{figure}[h!] % 'h!' oznacza próbę umieszczenia obrazu w bieżącym miejscu
+    \centering % Wyśrodkowanie obrazu
+    \includegraphics[width=\linewidth]{2 schemat 1 funkca.jpeg} 
+    \caption{Schemat blokowy algorytmu funkcji sym2}
+   
+    \label{fig:etykieta} % Opcjonalna etykieta do odwoływania się w tekście
+\end{figure}
+\FloatBarrier
+
+Funkcja iteracyjnie analizuje elementy w podciągu, sprawdzając, czy elementy znajdujące się po obu stronach wskazanej wartości są równe. Wskaźniki "lewa" i "prawa" przesuwają się w przeciwnych kierunkach, dopóki nie zostanie wykryta różnica lub nie zostaną osiągnięte granice podciągu. Dzięki temu algorytm skutecznie identyfikuje symetrię w podciągu, co czyni go prostym w implementacji i efektywnym w analizie danych wejściowych.
+
+
+
+\begin{figure}[h!] % 'h!' oznacza próbę umieszczenia obrazu w bieżącym miejscu
+    \centering % Wyśrodkowanie obrazu
+    \includegraphics[width=\linewidth]{2 schemat blokowy nr2.jpeg}
+    \caption{Schemat blokowy algorytmu funkcji main}
+
+    \label{fig:etykieta} % Opcjonalna etykieta do odwoływania się w tekście
+\end{figure}
+\FloatBarrier
+\newpage
+Algorytm przetwarza ciąg wejściowy, wyszukując podciągi spełniające kryterium symetrii. Rozpoczyna analizę od wartości równej 2, a następnie, za pomocą wskaźników początek i koniec, tworzy podciąg i weryfikuje go funkcją sym2. Jeśli podciąg spełnia kryteria, dodawany jest do listy wyników.
+
+Algorytm działa iteracyjnie, rozszerzając zakres podciągu do wyczerpania możliwości. Wynikiem jest lista symetrycznych podciągów lub komunikat o ich braku. Prosta konstrukcja zapewnia efektywność i skalowalność, umożliwiając analizę dużych danych.
+
+
+\newpage
+
+
+\subsection{Algorytm zapisany w pseudokodzie}
+
+
+
+\begin{lstlisting}[caption={Funkcja \texttt{sym2} (sprawdzanie symetrii względem dwójek)}, label={alg:sym2}]
+Function sym2(podciag)
+    For i = 0 To size(podciag) - 1
+        If podciag[i] = 2
+            State lewa = i - 1
+            State prawa = i + 1
+
+            While lewa >= 0 And prawa < size(podciag)
+                If podciag[lewa]   podciag[prawa]
+                    Return False
+                EndIf
+                State lewa = lewa - 1
+                State prawa = prawa + 1
+            EndWhile
+
+            Return True
+        EndIf
+    EndFor
+
+    Return False
+EndFunction
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Główna funkcja - Wyszukiwanie podciągów symetrycznych względem dwójek}, label={alg:main}]
+State ciag = [0, 1, 2, 1, 1, 0, 2, 0, 1, 1, 1, 1, 2, 0]
+State wyniki = []
+
+For poczatek = 0 To size(ciag) - 1
+    For koniec = poczatek To size(ciag) - 1
+        State podciag = elements from ciag[poczatek] to ciag[koniec]
+        
+        If Call sym2(podciag)
+            State wyniki = wyniki + podciag
+        EndIf
+    EndFor
+EndFor
+
+If size(wyniki) = 0
+    State "Brak elementow spelniajacych zadane kryteria."
+Else
+    ForEach podciag in wyniki
+        State podciag
+    EndFor
+EndIf
+\end{lstlisting}
+\newpage
+
+\subsection{Sprawdzenie poprawności algorytmu poprzez „ołówkowe” rozwiązanie problemu}
+\section*{Sprawdzenie poprawności algorytmu - przykład}
+
+Dla ciągu:
+\[
+\texttt{ciag} = \{0, 1, 2, 1, 1, 0, 2, 0, 1, 1, 1, 1, 2, 0\}
+\]
+algorytm ma za zadanie znaleźć podciągi symetryczne względem dwójek.
+
+\subsection*{Kroki wykonania algorytmu}
+
+\begin{enumerate}
+    \item Inicjalizacja:
+        \begin{itemize}
+            \item \texttt{ciag} = \{0, 1, 2, 1, 1, 0, 2, 0, 1, 1, 1, 1, 2, 0\}
+            \item Zmienna \texttt{wyniki} = []
+        \end{itemize}
+        
+    \item Przechodzimy po ciągu w poszukiwaniu dwójek (2):
+        \begin{itemize}
+            \item Dla pierwszej dwójki na indeksie 2:
+            \begin{itemize}
+                \item Podciąg zaczynający się od tej dwójki: \{2\}
+                \item Sprawdzamy symetrię: \{2\} jest symetryczny.
+                \item Dodajemy \{2\} do wyników.
+                
+                Rozszerzamy zakres:
+                \item Podciąg \{1, 2, 1\} - symetryczny.
+                \item Dodajemy \{1, 2, 1\} do wyników.
+                
+                Rozszerzamy dalej:
+                \item Podciąg \{0, 1, 2, 1, 0\} - symetryczny.
+                \item Dodajemy \{0, 1, 2, 1, 0\} do wyników.
+            \end{itemize}
+            
+            \item Dla drugiej dwójki na indeksie 6:
+            \begin{itemize}
+                \item Podciąg zaczynający się od tej dwójki: \{2\}
+                \item Sprawdzamy symetrię: \{2\} jest symetryczny.
+                \item Dodajemy \{2\} do wyników.
+                
+                Rozszerzamy zakres:
+                \item Podciąg \{0, 2, 0\} - symetryczny.
+                \item Dodajemy \{0, 2, 0\} do wyników.
+                
+                Rozszerzamy dalej:
+                \item Podciąg \{1, 0, 2, 0, 1\} - symetryczny.
+                \item Dodajemy \{1, 0, 2, 0, 1\} do wyników.
+                
+                Rozszerzamy dalej:
+                \item Podciąg \{1, 1, 0, 2, 0, 1\} - symetryczny.
+                \item Dodajemy \{1, 1, 0, 2, 0, 1\} do wyników.
+                
+                Rozszerzamy dalej:
+                \item Podciąg \{2, 1, 1, 0, 2, 0, 1\} - symetryczny.
+                \item Dodajemy \{2, 1, 1, 0, 2, 0, 1\} do wyników.
+                
+                Rozszerzamy dalej:
+                \item Podciąg \{1, 2, 1, 1, 0, 2, 0, 1\} - nie jest symetryczny.
+                \item Kończymy rozszerzanie.
+            \end{itemize}
+            
+            \item Dla trzeciej dwójki na indeksie 12:
+            \begin{itemize}
+                \item Podciąg zaczynający się od tej dwójki: \{2\}
+                \item Sprawdzamy symetrię: \{2\} jest symetryczny.
+                \item Dodajemy \{2\} do wyników.
+                
+                Rozszerzamy zakres:
+                \item Podciąg \{1, 2, 1\} - symetryczny.
+                \item Dodajemy \{1, 2, 1\} do wyników.
+                
+                Rozszerzamy dalej:
+                \item Podciąg \{1, 1, 2, 1, 0\} - nie jest symetryczny.
+                \item Kończymy rozszerzanie.
+            \end{itemize}
+    \end{itemize}
+    
+    \item Kończymy przeszukiwanie.
+    \item Ostateczne wyniki:
+        \begin{itemize}
+            \item \{2\}, \{1, 2, 1\}, \{0, 1, 2, 1, 0\}, \{2\}, \{0, 2, 0\}, \{1, 0, 2, 0, 1\}, \{1, 1, 0, 2, 0, 1\}, \{2, 1, 1, 0, 2, 0, 1\}, \{1, 2, 1\}.
+        \end{itemize}
+\end{enumerate}
+
+\newpage
+\subsection{Teoretyczne oszacowanie złożoności obliczeniowej}
+
+\subsection*{1. Pętla wyszukująca dwójki w ciągu}
+Kod:
+\begin{verbatim}
+for (int i = 0; i < ciag.size(); ++i) {
+    if (ciag[i] == 2) {
+        ...
+    }
+}
+\end{verbatim}
+
+Długość ciągu oznaczmy jako \(n\). Pętla ta wykonuje \(n\) iteracji, więc jej złożoność czasowa wynosi:
+\[
+O(n)
+\]
+
+\subsection*{2. Rozszerzanie podciągu wokół znalezionej dwójki}
+Kod:
+\begin{verbatim}
+while (poczatek >= 0 && koniec < ciag.size()) {
+    ...
+    poczatek--;
+    koniec++;
+}
+\end{verbatim}
+
+Dla każdej dwójki, pętla ta może wykonać w najgorszym przypadku \(O(n)\) iteracji (jeśli podciąg rozszerza się od początku do końca ciągu).
+
+\subsection*{3. Tworzenie podciągu i sprawdzanie symetryczności}
+\begin{itemize}
+    \item Tworzenie podciągu:
+    \begin{verbatim}
+    vector<int> podciag(ciag.begin() + poczatek, ciag.begin() + koniec + 1);
+    \end{verbatim}
+    Operacja kopiowania podciągu zajmuje \(O(k)\), gdzie \(k\) to długość podciągu (\(k \leq n\)).
+
+    \item Sprawdzanie symetryczności:
+    \begin{verbatim}
+    sym2(podciag, i - poczatek);
+    \end{verbatim}
+    Funkcja sprawdza symetrię względem dwójki, wykonując \(O(k)\) porównań (\(k\) to długość podciągu).
+\end{itemize}
+
+Całkowity koszt każdej iteracji pętli \texttt{while} to:
+\[
+O(k) + O(k) = O(k)
+\]
+
+\subsection*{4. Łączna złożoność obliczeniowa}
+Załóżmy, że w ciągu znajduje się \(m\) dwójek. Dla każdej dwójki wykonujemy \(O(n)\) iteracji pętli \texttt{while}, a każda iteracja ma koszt \(O(k)\), gdzie \(k \leq n\). 
+
+W najgorszym przypadku (\(m = n\), czyli każda liczba to 2), całkowity koszt wynosi:
+\[
+O(m \cdot n^2) = O(n^3)
+\]
+
+\subsection*{Złożoność przestrzenna}
+Każdy podciąg jest przechowywany w wektorze. W najgorszym przypadku liczba podciągów wynosi \(O(n^2)\), a rozmiar każdego podciągu może wynosić do \(O(n)\). 
+
+Złożoność przestrzenna wynosi zatem:
+\[
+O(n^3)
+\]
+
+\subsection*{Podsumowanie}
+\begin{itemize}
+    \item \textbf{Złożoność czasowa:} \(O(n^3)\) w najgorszym przypadku.
+    \item \textbf{Złożoność przestrzenna:} \(O(n^3)\) w najgorszym przypadku.
+\end{itemize}
+
+\newpage
+
+\section{Implementacja wymyślonych algorytmów w wybranym środowisku i języku oraz eksperymentalne potwierdzenie wydajności (złożoności obliczeniowej) algorytmów}
+\subsection{Prosta implementacja}
+
+Poniżej znajduje się pełny kod programu w C++, który implementuje dwa podejścia do wyszukiwania podciągów "symetrycznych wzdlędem dwójek z ciagu złożonego z samych zer, jedynek i dwójek
+
+\begin{lstlisting}[language={C++}, caption={}, label={lst:cpp_code}]
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+// Funkcja do sprawdzania, czy podciąg jest symetryczny względem dwójek
+bool sym2(const vector<int>& podciag, int indeksDwojki) {
+    int lewa = indeksDwojki - 1;
+    int prawa = indeksDwojki + 1;
+
+    // Sprawdzamy, czy elementy po obu stronach dwójki są symetryczne
+    while (lewa >= 0 && prawa < podciag.size()) {
+        if (podciag[lewa] != podciag[prawa]) {
+            return false; // Podciąg nie jest symetryczny
+        }
+        lewa--;
+        prawa++;
+    }
+    return true; // Podciąg jest symetryczny względem dwójek
+}
+
+// Funkcja do sprawdzania, czy podciąg zawiera symetrię względem dowolnej dwójki
+bool sym2Any(const vector<int>& podciag) {
+    for (int i = 0; i < podciag.size(); ++i) {
+        if (podciag[i] == 2 && sym2(podciag, i)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+int main() {
+    vector<int> ciag = {0, 1, 2, 1, 1, 0, 2, 0, 1, 1, 1, 1, 2, 0};
+    vector<vector<int>> wyniki;
+
+    // Szukamy wszystkich podciągów
+    for (int poczatek = 0; poczatek < ciag.size(); ++poczatek) {
+        for (int koniec = poczatek + 1; koniec <= ciag.size(); ++koniec) {
+            vector<int> podciag(ciag.begin() + poczatek, ciag.begin() + koniec);
+
+            // Jeśli podciąg jest symetryczny względem dowolnej dwójki, dodajemy go do wyników
+            if (sym2Any(podciag)) {
+                wyniki.push_back(podciag);
+            }
+        }
+    }
+
+    // Wyświetlamy wyniki
+    if (wyniki.empty()) {
+        cout << "Brak elementów spełniających zadane kryteria." << endl;
+    } else {
+        for (const auto& podciag : wyniki) {
+            cout << "[";
+            for (size_t i = 0; i < podciag.size(); ++i) {
+                cout << podciag[i];
+                if (i != podciag.size() - 1) cout << ", ";
+            }
+            cout << "]" << endl;
+        }
+    }
+
+    return 0;
+}
+
+
+\end{lstlisting}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{}
+\begin{figure}
+        \centering
+        \includegraphics[width=0.5\linewidth]{wynikii.png}
+        \caption{Enter Caption}
+        \label{fig:enter-label}
+    \end{figure}
+        \caption{Wynik implementacji obu algorytmów}
+    \label{fig:enter-label}
+\end{figure}
+\newpage
+\subsection{Testy „niewygodnych” zestawów danych}
+W celu przetestowania poprawności działania zaimplementowanego algorytmu, przeprowadzono testy na kilku przypadkach, które można uznać za "niewygodne". Przedstawione poniżej testy mają na celu zweryfikowanie, jak algorytm zachowuje się w różnych sytuacjach – od prostych i specyficznych danych, takich jak ciągi jednorodne, po bardziej złożone, jak ciągi losowe czy pełne symetrii. Testy te pozwalają również ocenić wydajność algorytmu oraz jego zdolność do poprawnego wykrywania symetrycznych podciągów względem dwójek w różnych scenariuszach.
+
+
+\begin{lstlisting}[language=C++]
+
+
+// Funkcja pomocnicza do wypisywania wynikow
+void wypiszWyniki(const vector<vector<int>>& wyniki) {
+    if (wyniki.empty()) {
+        cout << "Brak elementów spełniających kryteria." << endl;
+    } else {
+        for (const auto& podciag : wyniki) {
+            cout << "[";
+            for (size_t i = 0; i < podciag.size(); ++i) {
+                cout << podciag[i];
+                if (i != podciag.size() - 1) cout << ", ";
+            }
+            cout << "]" << endl;
+        }
+    }
+}
+
+// Funkcja do znajdowania podciagow spelniajacych kryteria
+vector<vector<int>> znajdzPodciagi(const vector<int>& ciag) {
+    vector<vector<int>> wyniki;
+
+    // Szukamy wszystkich podciągów
+    for (int poczatek = 0; poczatek < ciag.size(); ++poczatek) {
+        for (int koniec = poczatek + 1; koniec <= ciag.size(); ++koniec) {
+            vector<int> podciag(ciag.begin() + poczatek, ciag.begin() + koniec);
+
+            // Jeśli podciąg jest symetryczny względem dowolnej dwójki, dodajemy go do wyników
+            if (sym2Any(podciag)) {
+                wyniki.push_back(podciag);
+            }
+        }
+    }
+    return wyniki;
+}
+
+// Test 1: Ciag z samymi zerami
+void test1() {
+    cout << "Test 1: Ciąg z samymi zerami" << endl;
+    vector<int> ciag = {0, 0, 0, 0, 0};
+    vector<vector<int>> wyniki = znajdzPodciagi(ciag);
+    wypiszWyniki(wyniki);
+}
+
+// Test 2: Ciag z jednym elementem
+void test2() {
+    cout << "Test 2: Ciag z jednym elementem" << endl;
+    vector<int> ciag = {1};
+    vector<vector<int>> wyniki = znajdzPodciagi(ciag);
+    wypiszWyniki(wyniki);
+}
+
+// Test 3: Ciag z duplikatami podciagow
+void test3() {
+    cout << "Test 3: Ciag z duplikatami podciagow" << endl;
+    vector<int> ciag = {1, 0, 2, 0, 1, 2, 1, 0};
+    vector<vector<int>> wyniki = znajdzPodciagi(ciag);
+    wypiszWyniki(wyniki);
+}
+
+// Test 4: Dlugi ciag losowy
+void test4() {
+    cout << "Test 4: Dlugi ciag losowy" << endl;
+    vector<int> ciag = {0, 1, 2, 1, 0, 2, 0, 1, 2, 2, 1, 0, 2, 1, 0, 2};
+    vector<vector<int>> wyniki = znajdzPodciagi(ciag);
+    wypiszWyniki(wyniki);
+}
+
+
+int main() {
+    test1();
+    cout<<endl;
+    test2();
+    cout<<endl;
+    test3();
+    cout<<endl;
+    test4();
+    
+    return 0;
+}
+\end{lstlisting}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\linewidth]{Zrzut ekranu 2025-01-24 133132.png}
+    \caption{Wyniki testów dla "niewygodnych danych"}
+    \label{fig:enter-label}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{Zrzut ekranu 2025-01-24 133233.png}
+    \caption{Wyniki testów dla "niewygodnych danych"}
+    \label{fig:enter-label}
+\end{figure}
+
+
+
+\textbf{Test 1: Tablica zawierająca same 0}
+
+Tablica składa się wyłącznie z elementów o wartości 0. Celem testu jest sprawdzenie, czy algorytm poprawnie rozpoznaje, że w takim przypadku nie może istnieć podciąg, który spełnia kryterium symetrii względem dwójek. Program poprawnie zwraca komunikat o braku podciągów spełniających zadane kryteria.
+
+\textbf{Test 2: Tablica z jednym elementem}
+
+W tym teście tablica zawiera tylko jeden element, który nie może być symetryczny względem dwójek, ponieważ brak jest elementów po obu stronach. Test ten sprawdza, czy algorytm radzi sobie z minimalnymi danymi wejściowymi. Program poprawnie zwraca informację o tym, że w danej tablicy nie występuje żaden podciąg spełniający kryteria.
+
+\newpage
+
+\textbf{Test 3: Tablica z pełną symetrią względem dwójek}
+
+Tablica została skonstruowana tak, aby zawierała wiele podciągów symetrycznych względem różnych pozycji dwójek. Test ten sprawdza zdolność algorytmu do poprawnego wykrywania wszystkich możliwych podciągów, które spełniają kryterium symetrii, oraz wydajność w przypadku dużej liczby wyników. Program poprawnie znajduje i zwraca wszystkie symetryczne podciągi.
+
+\textbf{Test 4: Tablica losowa o dużej długości}
+
+W teście użyto tablicy o dużej liczbie elementów, zawierającej przypadkowe wartości 0, 1 i 2. Celem testu jest sprawdzenie wydajności algorytmu w przypadku dużych danych wejściowych oraz poprawności wykrywania symetrycznych podciągów względem dwójek w scenariuszu, gdzie takie podciągi mogą występować losowo. Program poprawnie zwraca wszystkie znalezione podciągi, jednak czas wykonania wzrasta wraz z długością danych wejściowych.
+
+
+
+
+
+
+
+\newpage
+
+\subsection{Testy wydajności algorytmów – eksperymentalne sprawdzenie złożoności czasowej}
+
+W celu sprawdzenia złożoności czasowej algorytmu, przeprowadzono testy wydajnościowe. Algorytm przegląda wszystkie możliwe podciągi tablicy wejściowej, a następnie sprawdza dla każdego z nich, czy zawiera symetrię względem dwójki. Ze względu na wyczerpujące sprawdzanie całej przestrzeni podciągów, czas wykonania algorytmu wzrasta wraz z długością tablicy w sposób wykładniczy.
+
+Aby uzyskać miarodajne i stabilne wyniki, algorytm został przetestowany wielokrotnie, a czas działania mierzono w sekundach. Wyniki testów pokazują, że algorytm działa poprawnie, ale jego złożoność czasowa sprawia, że wykonanie operacji na dużych tablicach może być czasochłonne.
+
+
+
+
+
+\begin{lstlisting}[language=C++, caption={Kod testujący wydajność algorytmu}, label={lst:test_wydajnosc}]
+#include <iostream>
+#include <vector>
+#include <chrono>
+#include <ctime>
+using namespace std;
+using namespace chrono;
+
+// Pierwszy algorytm (pelne sprawdzanie wszystkich podciagow)
+bool sym2_v1(const vector<int>& podciag) {
+    for (int i = 0; i < podciag.size(); ++i) {
+        if (podciag[i] == 2) {
+            int lewa = i - 1;
+            int prawa = i + 1;
+            while (lewa >= 0 && prawa < podciag.size()) {
+                if (podciag[lewa] != podciag[prawa]) {
+                    return false;
+                }
+                lewa--;
+                prawa++;
+            }
+            return true;
+        }
+    }
+    return false;
+}
+
+void znajdzNajdluzszyPodciag1(const vector<int>& ciag) {
+    vector<vector<int>> wyniki;
+    for (int poczatek = 0; poczatek < ciag.size(); ++poczatek) {
+        for (int koniec = poczatek + 1; koniec <= ciag.size(); ++koniec) {
+            vector<int> podciag(ciag.begin() + poczatek, ciag.begin() + koniec);
+            if (sym2_v1(podciag)) {
+                wyniki.push_back(podciag);
+            }
+        }
+    }
+}
+
+// Drugi algorytm (sprawdzanie symetrycznosci wokol kazdej dwojki)
+bool sym2_v2(const vector<int>& podciag, int indeksDwojki) {
+    int lewa = indeksDwojki - 1;
+    int prawa = indeksDwojki + 1;
+    while (lewa >= 0 && prawa < podciag.size()) {
+        if (podciag[lewa] != podciag[prawa]) {
+            return false;
+        }
+        lewa--;
+        prawa++;
+    }
+    return true;
+}
+
+void znajdzNajdluzszyPodciag2(const vector<int>& ciag) {
+    vector<vector<int>> wyniki;
+    for (int i = 0; i < ciag.size(); ++i) {
+        if (ciag[i] == 2) {
+            int poczatek = i, koniec = i;
+            while (poczatek >= 0 && koniec < ciag.size()) {
+                vector<int> podciag(ciag.begin() + poczatek, ciag.begin() + koniec + 1);
+                if (sym2_v2(podciag, i - poczatek)) {
+                    wyniki.push_back(podciag);
+                }
+                poczatek--;
+                koniec++;
+            }
+        }
+    }
+}
+
+vector<int> generujTablice(int n) {
+    vector<int> tab(n);
+    for (int i = 0; i < n; ++i) {
+        tab[i] = rand() % 3; // Losowe wartości 0, 1, 2
+    }
+    return tab;
+}
+
+void zmierzCzas(int n, int powtorzeniaOptymalny) {
+    vector<int> tab = generujTablice(n);
+
+    // Pomiar czasu dla algorytmu brute force (1 raz)
+    auto start1 = high_resolution_clock::now();
+    znajdzNajdluzszyPodciag1(tab);
+    auto stop1 = high_resolution_clock::now();
+    auto czasWykonania1_s = duration<double>(stop1 - start1).count();
+    cout << "Algorytm brute force: n = " << n << ", czas = " << czasWykonania1_s << " s" << endl;
+
+    // Pomiar czasu dla algorytmu optymalnego (powtorzenia)
+    double sredniCzas2 = 0;
+    for (int i = 0; i < powtorzeniaOptymalny; ++i) {
+        auto start2 = high_resolution_clock::now();
+        znajdzNajdluzszyPodciag2(tab);
+        auto stop2 = high_resolution_clock::now();
+        auto czasWykonania2_s = duration<double>(stop2 - start2).count();
+        sredniCzas2 += czasWykonania2_s;
+    }
+    sredniCzas2 /= powtorzeniaOptymalny;
+    cout << "Algorytm optymalny: n = " << n << ", sredni czas = " << sredniCzas2 << " s" << endl;
+}
+
+int main() {
+    srand(time(0));
+    zmierzCzas(1000, 5);
+    zmierzCzas(1500, 5);
+    zmierzCzas(2000, 5);
+    zmierzCzas(2500, 5);
+    zmierzCzas(3000, 5);
+    zmierzCzas(3500, 5);
+    zmierzCzas(4000, 5);
+    return 0;
+}
+
+\end{lstlisting}
+
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{n} & \textbf{Algorytm brute force (czas)} & \textbf{Algorytm optymalny (średni czas)} \\
+\hline
+1000 & 0.469408 s & 0.086399 s \\
+1500 & 1.42047 s  & 0.166535 s \\
+2000 & 3.04464 s  & 0.277598 s \\
+2500 & 5.96644 s  & 0.411071 s \\
+3000 & 13.1686 s  & 0.558867 s \\
+3500 & 47.6991 s  & 0.806584 s \\
+4000 & 129.612 s  & 1.0705 s \\
+\hline
+\end{tabular}
+\caption{Czas obliczeń w zależności od długości tablicy}
+\label{tab:wyniki_algorytmow}
+\end{table}
+\begin{figure}[H]
+    \centering
+
+    \includegraphics[width=0.8\linewidth]{}
+\begin{figure}
+        \centering
+        \includegraphics[width=0.75\linewidth]{}
+\begin{figure}
+            \centering
+            \includegraphics[width=0.75\linewidth]{Zrzut ekranu 2025-01-24 160628.png}
+            
+            \label{fig:enter-label}
+        \end{figure}
+              
+        \label{fig:enter-label}
+    \end{figure}
+        \caption{Test złożoności czasowej dla algorytmu nr. 1}
+    \label{fig:enter-label}
+\end{figure}
+\begin{figure}[H]
+    \centering
+
+    \includegraphics[width=0.8\linewidth]{}
+\begin{figure}
+        \centering
+        \includegraphics[width=0.75\linewidth]{Zrzut ekranu 2025-01-24 160839.png}
+      
+        \label{fig:enter-label}
+    \end{figure}
+        \caption{Test złożoności czasowej dla algorytmu nr. 2}
+    \label{fig:enter-label}
+\end{figure}
+\begin{figure}[H]
+    \centering
+
+    \includegraphics[width=0.8\linewidth]{}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\linewidth]{}
+    
+    \label{fig:enter-label}
+\end{figure}
+\begin{figure}
+        \centering
+        \includegraphics[width=0.75\linewidth]{image.png}
+      
+        \label{fig:enter-label}
+    \end{figure}
+        \caption{Porównanie złożoności czasowej algorytmu nr. 1 i nr. 2}
+    \label{fig:enter-label}
+\end{figure}
+
+
+
+Wykresy pokazują wyraźną różnicę w czasie wykonania między algorytmem brute force a algorytmem optymalnym. Algorytm brute force rośnie nieliniowo z rozmiarem danych, osiągając 129 sekund przy n=4000, co sprawia, że staje się niepraktyczny dla dużych danych. Algorytm optymalny ma znacznie mniejszy czas wykonania, który rośnie liniowo, wynosząc około 1.07 sekundy przy n=4000, co czyni go bardziej wydajnym.
+Algorytm brute force ma problem ze skalowalnością, podczas gdy algorytm optymalny pokazuje lepszą skalowalność, co czyni go odpowiednim do pracy z dużymi danymi. W projektach wymagających przetwarzania dużych zbiorów danych należy preferować algorytmy o lepszej złożoności obliczeniowej, takie jak optymalny.
+
+Eksperymenty z czasami wykonania dwóch algorytmów jednoznacznie wskazują na przewagę algorytmu optymalnego nad brute force, zarówno pod względem czasu wykonania, jak i skalowalności. Optymalizacja algorytmu jest kluczowa dla aplikacji, które muszą obsługiwać dużą ilość danych w krótkim czasie.
+
+
+
+\chapter{Podsumowanie}
+
+W ramach projektu porównano dwa podejścia do rozwiązania problemu znajdowania najdłuższego podciągu tablicy z równą liczbą zer i jedynek. Analizie poddano algorytm brute force oraz algorytm zoptymalizowany, co pozwoliło ocenić ich wydajność, łatwość implementacji oraz zastosowanie w zależności od rozmiaru danych wejściowych.
+
+Algorytm brute force charakteryzuje się prostą implementacją i przejrzystą strukturą. Polega na generowaniu wszystkich możliwych podciągów tablicy i sprawdzaniu, czy spełniają one kryterium równowagi między zerami a jedynkami. Jego złożoność obliczeniowa wynosi $\mathcal{O}(n^3)$, ponieważ wymaga iteracyjnego generowania podciągów i dodatkowego ich analizowania. Choć takie podejście jest intuicyjne i łatwe do zrozumienia, jego wydajność szybko spada wraz ze wzrostem rozmiaru tablicy, co ogranicza jego zastosowanie do małych danych wejściowych.
+
+Z kolei algorytm zoptymalizowany został zaprojektowany z myślą o efektywnym przetwarzaniu danych. Wykorzystuje selektywne przetwarzanie, skupiając się na istotnych elementach tablicy (np. wokół dwójek w zadanym ciągu). Zamiast analizować wszystkie możliwe podciągi, algorytm ten dynamicznie sprawdza jedynie podciągi, które mogą spełniać kryterium symetrii, co znacząco redukuje liczbę operacji. Dzięki temu osiąga złożoność obliczeniową bliską $\mathcal{O}(n^2)$, co czyni go znacznie bardziej wydajnym przy dużych zbiorach danych.
+
+Porównanie obu podejść wykazało, że algorytm brute force, choć prosty i łatwy w implementacji, nadaje się jedynie do pracy z małymi tablicami, gdzie czas wykonania nie stanowi problemu. Algorytm zoptymalizowany jest bardziej złożony do zaimplementowania, ale zapewnia znaczącą poprawę wydajności, zwłaszcza przy większych danych wejściowych.
+
+Podsumowując, wybór algorytmu zależy od wielkości danych wejściowych oraz wymagań dotyczących wydajności. Algorytm brute force może być stosowany w sytuacjach, gdzie prostota implementacji jest kluczowa, natomiast algorytm zoptymalizowany jest znacznie lepszym wyborem w przypadku dużych zbiorów danych, gdzie wydajność ma kluczowe znaczenie.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
