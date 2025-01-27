@@ -1,0 +1,109 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+// Funkcja do sprawdzania, czy podciąg jest symetryczny względem dwójek
+bool sym2(const vector<int>& podciag, int indeksDwojki) {
+    int lewa = indeksDwojki - 1;
+    int prawa = indeksDwojki + 1;
+
+    // Sprawdzamy, czy elementy po obu stronach dwójki są symetryczne
+    while (lewa >= 0 && prawa < podciag.size()) {
+        if (podciag[lewa] != podciag[prawa]) {
+            return false; // Podciąg nie jest symetryczny
+        }
+        lewa--;
+        prawa++;
+    }
+    return true; // Podciąg jest symetryczny względem dwójek
+}
+
+// Funkcja do sprawdzania, czy podciąg zawiera symetrię względem dowolnej dwójki
+bool sym2Any(const vector<int>& podciag) {
+    for (int i = 0; i < podciag.size(); ++i) {
+        if (podciag[i] == 2 && sym2(podciag, i)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+// Funkcja pomocnicza do wypisywania wyników
+void wypiszWyniki(const vector<vector<int>>& wyniki) {
+    if (wyniki.empty()) {
+        cout << "Brak elementow spelniajacych kryteria." << endl;
+    } else {
+        for (const auto& podciag : wyniki) {
+            cout << "[";
+            for (size_t i = 0; i < podciag.size(); ++i) {
+                cout << podciag[i];
+                if (i != podciag.size() - 1) cout << ", ";
+            }
+            cout << "]" << endl;
+        }
+    }
+}
+
+// Funkcja do znajdowania podciągów spełniających kryteria
+vector<vector<int>> znajdzPodciagi(const vector<int>& ciag) {
+    vector<vector<int>> wyniki;
+
+    // Szukamy wszystkich podciągów
+    for (int poczatek = 0; poczatek < ciag.size(); ++poczatek) {
+        for (int koniec = poczatek + 1; koniec <= ciag.size(); ++koniec) {
+            vector<int> podciag(ciag.begin() + poczatek, ciag.begin() + koniec);
+
+            // Jeśli podciąg jest symetryczny względem dowolnej dwójki, dodajemy go do wyników
+            if (sym2Any(podciag)) {
+                wyniki.push_back(podciag);
+            }
+        }
+    }
+    return wyniki;
+}
+
+// Test 1: Ciąg z samymi zerami
+void test1() {
+    cout << "Test 1: Ciag z samymi zerami" << endl;
+    vector<int> ciag = {0, 0, 0, 0, 0};
+    vector<vector<int>> wyniki = znajdzPodciagi(ciag);
+    wypiszWyniki(wyniki);
+}
+
+// Test 2: Ciąg z jednym elementem
+void test2() {
+    cout << "Test 2: Ciag z jednym elementem" << endl;
+    vector<int> ciag = {1};
+    vector<vector<int>> wyniki = znajdzPodciagi(ciag);
+    wypiszWyniki(wyniki);
+}
+
+// Test 3: Ciąg z duplikatami podciągów
+void test3() {
+    cout << "Test 3: Ciag z duplikatami podciagów" << endl;
+    vector<int> ciag = {1, 0, 2, 0, 1, 2, 1, 0};
+    vector<vector<int>> wyniki = znajdzPodciagi(ciag);
+    wypiszWyniki(wyniki);
+}
+
+// Test 4: Długi ciąg losowy
+void test4() {
+    cout << "Test 4: Dlugi ciag losowy" << endl;
+    vector<int> ciag = {0, 1, 2, 1, 0, 2, 0, 1, 2, 2, 1, 0, 2, 1, 0, 2};
+    vector<vector<int>> wyniki = znajdzPodciagi(ciag);
+    wypiszWyniki(wyniki);
+}
+
+
+
+int main() {
+    test1();
+    cout<<endl;
+    test2();
+    cout<<endl;
+    test3();
+    cout<<endl;
+    test4();
+
+    return 0;
+}
