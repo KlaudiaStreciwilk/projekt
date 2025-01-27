@@ -1,0 +1,111 @@
+#include <iostream>
+#include <vector>
+#include <chrono>
+#include <ctime>
+using namespace std;
+using namespace chrono;
+
+// Pierwszy algorytm (pełne sprawdzanie wszystkich podciągów)
+bool sym2_v1(const vector<int>& podciag) {
+    for (int i = 0; i < podciag.size(); ++i) {
+        if (podciag[i] == 2) {
+            int lewa = i - 1;
+            int prawa = i + 1;
+            while (lewa >= 0 && prawa < podciag.size()) {
+                if (podciag[lewa] != podciag[prawa]) {
+                    return false;
+                }
+                lewa--;
+                prawa++;
+            }
+            return true;
+        }
+    }
+    return false;
+}
+
+void znajdzNajdluzszyPodciag1(const vector<int>& ciag) {
+    vector<vector<int>> wyniki;
+    for (int poczatek = 0; poczatek < ciag.size(); ++poczatek) {
+        for (int koniec = poczatek + 1; koniec <= ciag.size(); ++koniec) {
+            vector<int> podciag(ciag.begin() + poczatek, ciag.begin() + koniec);
+            if (sym2_v1(podciag)) {
+                wyniki.push_back(podciag);
+            }
+        }
+    }
+}
+
+// Drugi algorytm (sprawdzanie symetryczności wokół każdej dwójki)
+bool sym2_v2(const vector<int>& podciag, int indeksDwojki) {
+    int lewa = indeksDwojki - 1;
+    int prawa = indeksDwojki + 1;
+    while (lewa >= 0 && prawa < podciag.size()) {
+        if (podciag[lewa] != podciag[prawa]) {
+            return false;
+        }
+        lewa--;
+        prawa++;
+    }
+    return true;
+}
+
+void znajdzNajdluzszyPodciag2(const vector<int>& ciag) {
+    vector<vector<int>> wyniki;
+    for (int i = 0; i < ciag.size(); ++i) {
+        if (ciag[i] == 2) {
+            int poczatek = i, koniec = i;
+            while (poczatek >= 0 && koniec < ciag.size()) {
+                vector<int> podciag(ciag.begin() + poczatek, ciag.begin() + koniec + 1);
+                if (sym2_v2(podciag, i - poczatek)) {
+                    wyniki.push_back(podciag);
+                }
+                poczatek--;
+                koniec++;
+            }
+        }
+    }
+}
+
+vector<int> generujTablice(int n) {
+    vector<int> tab(n);
+    for (int i = 0; i < n; ++i) {
+        tab[i] = rand() % 3; // Losowe wartości 0, 1, 2
+    }
+    return tab;
+}
+
+void zmierzCzas(int n, int powtorzeniaOptymalny) {
+    vector<int> tab = generujTablice(n);
+
+    // Pomiar czasu dla algorytmu brute force (1 raz)
+    auto start1 = high_resolution_clock::now();
+    znajdzNajdluzszyPodciag1(tab);
+    auto stop1 = high_resolution_clock::now();
+    auto czasWykonania1_s = duration<double>(stop1 - start1).count();
+    cout << "Algorytm brute force: n = " << n << ", czas = " << czasWykonania1_s << " s" << endl;
+
+    // Pomiar czasu dla algorytmu optymalnego (powtórzenia)
+    double sredniCzas2 = 0;
+    for (int i = 0; i < powtorzeniaOptymalny; ++i) {
+        auto start2 = high_resolution_clock::now();
+        znajdzNajdluzszyPodciag2(tab);
+        auto stop2 = high_resolution_clock::now();
+        auto czasWykonania2_s = duration<double>(stop2 - start2).count();
+        sredniCzas2 += czasWykonania2_s;
+    }
+    sredniCzas2 /= powtorzeniaOptymalny;
+    cout << "Algorytm optymalny: n = " << n << ", sredni czas = " << sredniCzas2 << " s" << endl;
+}
+
+int main() {
+    srand(time(0));
+    zmierzCzas(1000, 5);
+    zmierzCzas(1500, 5);
+    zmierzCzas(2000, 5);
+    zmierzCzas(2500, 5);
+    zmierzCzas(3000, 5);
+    zmierzCzas(3500, 5);
+    zmierzCzas(4000, 5);
+    return 0;
+}
