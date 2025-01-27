@@ -1,0 +1,62 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+// Funkcja do sprawdzania, czy podciąg jest symetryczny względem dwójek
+bool sym2(const vector<int>& podciag, int indeksDwojki) {
+    int lewa = indeksDwojki - 1;
+    int prawa = indeksDwojki + 1;
+
+    // Sprawdzamy, czy elementy po obu stronach dwójki są symetryczne
+    while (lewa >= 0 && prawa < podciag.size()) {
+        if (podciag[lewa] != podciag[prawa]) {
+            return false; // Podciąg nie jest symetryczny
+        }
+        lewa--;
+        prawa++;
+    }
+    return true; // Podciąg jest symetryczny względem dwójek
+}
+
+// Funkcja do sprawdzania, czy podciąg zawiera symetrię względem dowolnej dwójki
+bool sym2Any(const vector<int>& podciag) {
+    for (int i = 0; i < podciag.size(); ++i) {
+        if (podciag[i] == 2 && sym2(podciag, i)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+int main() {
+    vector<int> ciag = {0, 1, 2, 1, 1, 0, 2, 0, 1, 1, 1, 1, 2, 0};
+    vector<vector<int>> wyniki;
+
+    // Szukamy wszystkich podciągów
+    for (int poczatek = 0; poczatek < ciag.size(); ++poczatek) {
+        for (int koniec = poczatek + 1; koniec <= ciag.size(); ++koniec) {
+            vector<int> podciag(ciag.begin() + poczatek, ciag.begin() + koniec);
+
+            // Jeśli podciąg jest symetryczny względem dowolnej dwójki, dodajemy go do wyników
+            if (sym2Any(podciag)) {
+                wyniki.push_back(podciag);
+            }
+        }
+    }
+
+    // Wyświetlamy wyniki
+    if (wyniki.empty()) {
+        cout << "Brak elementów spełniających zadane kryteria." << endl;
+    } else {
+        for (const auto& podciag : wyniki) {
+            cout << "[";
+            for (size_t i = 0; i < podciag.size(); ++i) {
+                cout << podciag[i];
+                if (i != podciag.size() - 1) cout << ", ";
+            }
+            cout << "]" << endl;
+        }
+    }
+
+    return 0;
+}
